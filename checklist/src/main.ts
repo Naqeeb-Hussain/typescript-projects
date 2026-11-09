@@ -1,5 +1,6 @@
 import './css/style.css'
 import FullList from './model/FullList'
+import ListItem from './model/ListItem'
 
 const checklist = new FullList()
 const listElement = document.querySelector('#listItems')
@@ -21,3 +22,22 @@ const renderList = () => {
 
 checklist.load()
 renderList()
+
+const form = document.querySelector('#itemEntryForm')
+const input = document.querySelector('#newItem')
+
+if (!(form instanceof HTMLFormElement) || !(input instanceof HTMLInputElement)) {
+  throw new Error('Checklist form or input is missing')
+}
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault()
+
+  const text = input.value.trim()
+  if (text === '') return
+
+  const task = new ListItem(crypto.randomUUID(), text)
+  checklist.addItem(task)
+  renderList()
+  input.value = ''
+})
